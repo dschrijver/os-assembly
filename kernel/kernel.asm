@@ -29,12 +29,32 @@ main:
     mov ebx, 100 ; Wait a 0.1 seconds for randomizer initialization
     call sleep
 
-    ; Initialize randomizer. Not completely necessary.
-    mov ebx, dword [TICKS + KERNEL_OFFSET]
-    call srand
-
     mov ebx, KEY_FUNCTIONS + KERNEL_OFFSET
     call print
+
+    ; Initialize randomizer. Not completely necessary.
+    ; mov ebx, dword [TICKS + KERNEL_OFFSET]
+    mov ebx, 3
+    call srand
+
+    mov ebx, 0xabcd1234
+    mov ecx, 20
+    .print_rand_loop:
+        dec ecx
+        test ecx, ecx
+        jz .end_print_rand_loop
+
+        call newline
+        call randrange
+
+        push ebx
+        mov ebx, eax
+        call print_hex
+        pop ebx
+
+        jmp .print_rand_loop
+
+    .end_print_rand_loop:
 
     .home:
         mov bl, byte [RUNNING + KERNEL_OFFSET] ; Toggled by F4
