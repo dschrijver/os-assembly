@@ -122,14 +122,17 @@ print_hex:
     mov esi, esp ; save the top of the stack
 
     mov eax, ebx ; EAX will be the one which is divided by
-    mov ecx, 0x10 ; Divisor, for hexadecimal.
 
     sub esp, 1
     mov byte [esp], 0 ; end of the string
 
+    mov ecx, 0
     .loop:
         mov edx, 0 ; EDX:EAX will be the one divided by
+        push ecx
+        mov ecx, 0x10 ; Divisor, for hexadecimal.
         div ecx ; result in EAX, remainder in EDX
+        pop ecx
 
         mov ebx, edx
         cmp ebx, 9
@@ -144,8 +147,22 @@ print_hex:
         sub esp, 1
         mov byte [esp], bl
 
+        inc ecx
+
         test eax, eax
         jnz .loop
+    
+    mov ebx, 8
+    sub ebx, ecx
+
+    .loop2:
+        test ebx, ebx
+        jz .end_loop2
+        sub esp, 1
+        mov byte [esp], '0'
+        dec ebx
+        jmp .loop2
+    .end_loop2:
 
     mov ebx, esp
     call print

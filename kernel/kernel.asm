@@ -33,28 +33,8 @@ main:
     call print
 
     ; Initialize randomizer. Not completely necessary.
-    ; mov ebx, dword [TICKS + KERNEL_OFFSET]
-    mov ebx, 3
+    mov ebx, dword [TICKS + KERNEL_OFFSET]
     call srand
-
-    mov ebx, 0xabcd1234
-    mov ecx, 20
-    .print_rand_loop:
-        dec ecx
-        test ecx, ecx
-        jz .end_print_rand_loop
-
-        call newline
-        call randrange
-
-        push ebx
-        mov ebx, eax
-        call print_hex
-        pop ebx
-
-        jmp .print_rand_loop
-
-    .end_print_rand_loop:
 
     .home:
         mov bl, byte [RUNNING + KERNEL_OFFSET] ; Toggled by F4
@@ -74,7 +54,9 @@ main:
 %include "cpu/isr.asm"
 %include "cpu/interrupt.asm"
 %include "cpu/timer.asm"
+%include "cpu/mem.asm"
 %include "kernel/math.asm"
+%include "kernel/big32.asm"
 %include "game/game.asm"
 
 
@@ -82,4 +64,4 @@ MESSAGE:
     db "Entered kernel. ", 0
 
 KEY_FUNCTIONS:
-    db "[ESC]: clear screen, [F1]: disable cursor, [F2]: enable cursor, [F3]: toggle drawing mode (spacebar), [F4]: toggle game",0
+    db "[ESC]: clear screen, [F1]: disable cursor, [F2]: enable cursor, [F3]: toggle drawing mode (spacebar), [F4]: toggle game", 0

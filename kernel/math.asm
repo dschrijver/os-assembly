@@ -4,11 +4,11 @@ RAND_A      equ 1103515245
 RAND_C      equ 12345
 
 
-
 power:
     ; Calculates pow(b, e) = b^e. Note that
     ; the result is stored in a 32bit register, and
-    ; overflow is not handled. 
+    ; overflow is not handled. A negative exponent will 
+    ; return zero. 
     ;
     ; Parameters
     ; ----------
